@@ -1,0 +1,112 @@
+{% extends 'marketing/base.html' %}
+
+{% block title %}Marketing Links - AppointMark{% endblock %}
+{% block page_title %}Marketing Links{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <p class="text-muted mb-0">Generate and track short links across marketing channels.</p>
+    <button type="button" class="btn btn-primary d-flex align-items-center gap-2 rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#createLinkModal">
+        <i class="fa-solid fa-plus"></i>
+        <span>Generate Link</span>
+    </button>
+</div>
+
+<!-- Links Table Card -->
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table custom-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Short Link</th>
+                        <th>Member</th>
+                        <th>Platform</th>
+                        <th>Campaign</th>
+                        <th>Visits</th>
+                        <th>Leads</th>
+                        <th>Bookings</th>
+                        <th>Created</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for link in links %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <code class="fs-6 fw-bold text-primary px-2 py-1 rounded" style="background-color: var(--primary-light);">/m/{{ link.short_code }}</code>
+                                <a href="{% url 'redirect_short_link' link.short_code %}" target="_blank" class="text-muted">
+                                    <i class="fa-solid fa-up-right-from-square small"></i>
+                                </a>
+                            </div>
+                        </td>
+                        <td><span class="fw-medium">{{ link.member.name }}</span></td>
+                        <td><span class="badge-platform">{{ link.get_platform_display }}</span></td>
+                        <td><code>{{ link.campaign }}</code></td>
+                        <td><span class="fw-bold text-secondary">{{ link.visit_count }}</span></td>
+                        <td><span class="fw-bold text-primary">{{ link.lead_count }}</span></td>
+                        <td><span class="fw-bold text-success">{{ link.booking_count }}</span></td>
+                        <td class="small text-muted">{{ link.created_at|date:"M d, Y" }}</td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-primary rounded-pill px-3" 
+                                    onclick="copyToClipboard('{{ request.scheme }}://{{ request.get_host }}/m/{{ link.short_code }}/', this)">
+                                <i class="fa-regular fa-copy me-1"></i> Copy Link
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="text-center py-4 text-muted">No links created yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Create Link Modal -->
+<div class="modal fade" id="createLinkModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title fw-bold">Generate Trackable Link</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{% url 'links' %}">
+                {% csrf_token %}
+                <div class="modal-body py-3">
+                    <div class="mb-3">
+                        <label for="linkMember" class="form-label fw-semibold">Marketing Member <span class="text-danger">*</span></label>
+                        <select class="form-select" id="linkMember" name="member" required>
+                            <option value="" selected disabled>Select team member...</option>
+                            {% for member in members %}
+                                <option value="{{ member.id }}">{{ member.name }} ({{ member.member_id }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="linkPlatform" class="form-label fw-semibold">Platform / Source <span class="text-danger">*</span></label>
+                        <select class="form-select" id="linkPlatform" name="platform" required>
+                            {% for code, label in platform_choices %}
+                                <option value="{{ code }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="linkCampaign" class="form-label fw-semibold">Campaign Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="linkCampaign" name="campaign" placeholder="e.g. september_promo" required>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">Generate Link</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

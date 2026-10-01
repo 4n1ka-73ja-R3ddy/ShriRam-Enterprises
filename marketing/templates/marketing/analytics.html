@@ -1,0 +1,204 @@
+{% extends 'marketing/base.html' %}
+
+{% block title %}Analytics - AppointMark{% endblock %}
+{% block page_title %}Marketing Analytics{% endblock %}
+
+{% block content %}
+<!-- Nav Tabs -->
+<ul class="nav nav-pills custom-pills mb-4 gap-2" id="analyticsTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active rounded-pill px-4" id="member-tab" data-bs-toggle="tab" data-bs-target="#member-pane" type="button" role="tab">
+            <i class="fa-solid fa-user-group me-1"></i> Member Performance
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link rounded-pill px-4" id="platform-tab" data-bs-toggle="tab" data-bs-target="#platform-pane" type="button" role="tab">
+            <i class="fa-solid fa-share-nodes me-1"></i> Platform / Source
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link rounded-pill px-4" id="campaign-tab" data-bs-toggle="tab" data-bs-target="#campaign-pane" type="button" role="tab">
+            <i class="fa-solid fa-bullhorn me-1"></i> Campaigns
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link rounded-pill px-4" id="link-tab" data-bs-toggle="tab" data-bs-target="#link-pane" type="button" role="tab">
+            <i class="fa-solid fa-link me-1"></i> Links Breakdown
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="analyticsTabContent">
+    <!-- 1. Member Analytics -->
+    <div class="tab-pane fade show active" id="member-pane" role="tabpanel">
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table custom-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Member Name</th>
+                                <th>Member ID</th>
+                                <th>Visits</th>
+                                <th>Leads</th>
+                                <th>Qualified</th>
+                                <th>Bookings</th>
+                                <th>Conversion Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in member_analytics %}
+                            <tr>
+                                <td>
+                                    <div class="fw-bold">{{ item.member.name }}</div>
+                                    <small class="text-muted">{{ item.member.email }}</small>
+                                </td>
+                                <td><code>{{ item.member.member_id }}</code></td>
+                                <td><span class="fw-bold text-secondary">{{ item.visits }}</span></td>
+                                <td><span class="fw-bold text-primary">{{ item.leads }}</span></td>
+                                <td><span class="fw-bold text-warning">{{ item.qualified }}</span></td>
+                                <td><span class="fw-bold text-success">{{ item.bookings }}</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height: 6px;">
+                                            <div class="progress-bar" style="width: {{ item.conversion_rate }}%; background-color: var(--primary);"></div>
+                                        </div>
+                                        <span class="fw-bold small">{{ item.conversion_rate }}%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">No member data.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Platform Analytics -->
+    <div class="tab-pane fade" id="platform-pane" role="tabpanel">
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table custom-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Platform</th>
+                                <th>Visits</th>
+                                <th>Leads</th>
+                                <th>Qualified</th>
+                                <th>Bookings</th>
+                                <th>Conversion Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in platform_analytics %}
+                            <tr>
+                                <td><span class="badge-platform">{{ item.platform }}</span></td>
+                                <td><span class="fw-bold text-secondary">{{ item.visits }}</span></td>
+                                <td><span class="fw-bold text-primary">{{ item.leads }}</span></td>
+                                <td><span class="fw-bold text-warning">{{ item.qualified }}</span></td>
+                                <td><span class="fw-bold text-success">{{ item.bookings }}</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height: 6px;">
+                                            <div class="progress-bar" style="width: {{ item.conversion_rate }}%; background-color: var(--primary);"></div>
+                                        </div>
+                                        <span class="fw-bold small">{{ item.conversion_rate }}%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Campaign Analytics -->
+    <div class="tab-pane fade" id="campaign-pane" role="tabpanel">
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table custom-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Campaign</th>
+                                <th>Visits</th>
+                                <th>Leads</th>
+                                <th>Qualified</th>
+                                <th>Bookings</th>
+                                <th>Conversion Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in campaign_analytics %}
+                            <tr>
+                                <td><code>{{ item.campaign }}</code></td>
+                                <td><span class="fw-bold text-secondary">{{ item.visits }}</span></td>
+                                <td><span class="fw-bold text-primary">{{ item.leads }}</span></td>
+                                <td><span class="fw-bold text-warning">{{ item.qualified }}</span></td>
+                                <td><span class="fw-bold text-success">{{ item.bookings }}</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height: 6px;">
+                                            <div class="progress-bar" style="width: {{ item.conversion_rate }}%; background-color: var(--primary);"></div>
+                                        </div>
+                                        <span class="fw-bold small">{{ item.conversion_rate }}%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">No campaign data.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Link Breakdown -->
+    <div class="tab-pane fade" id="link-pane" role="tabpanel">
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table custom-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Short Link</th>
+                                <th>Member</th>
+                                <th>Platform</th>
+                                <th>Campaign</th>
+                                <th>Visits</th>
+                                <th>Leads</th>
+                                <th>Booked</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for link in links %}
+                            <tr>
+                                <td><code class="text-primary">/m/{{ link.short_code }}</code></td>
+                                <td>{{ link.member.name }}</td>
+                                <td><span class="badge-platform">{{ link.get_platform_display }}</span></td>
+                                <td><code>{{ link.campaign }}</code></td>
+                                <td><span class="fw-bold text-secondary">{{ link.visit_count }}</span></td>
+                                <td><span class="fw-bold text-primary">{{ link.lead_count }}</span></td>
+                                <td><span class="fw-bold text-success">{{ link.booking_count }}</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

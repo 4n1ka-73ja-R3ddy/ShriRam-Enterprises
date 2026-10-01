@@ -1,0 +1,90 @@
+{% extends 'marketing/base.html' %}
+
+{% block title %}Marketing Members - AppointMark{% endblock %}
+{% block page_title %}Marketing Members{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <p class="text-muted mb-0">Directory of team members generating and sharing marketing links.</p>
+    <button type="button" class="btn btn-primary d-flex align-items-center gap-2 rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+        <i class="fa-solid fa-plus"></i>
+        <span>Add Member</span>
+    </button>
+</div>
+
+<!-- Members Table Card -->
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table custom-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Member Details</th>
+                        <th>Member ID</th>
+                        <th>Visits</th>
+                        <th>Leads</th>
+                        <th>Qualified</th>
+                        <th>Bookings</th>
+                        <th>Created Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in members %}
+                    <tr>
+                        <td>
+                            <div class="fw-bold">{{ member.name }}</div>
+                            <small class="text-muted">{{ member.email }}</small>
+                        </td>
+                        <td>
+                            <code class="bg-subtle text-body px-2 py-1 rounded">{{ member.member_id }}</code>
+                        </td>
+                        <td><span class="fw-bold text-secondary">{{ member.total_visits }}</span></td>
+                        <td><span class="fw-bold text-primary">{{ member.total_leads }}</span></td>
+                        <td><span class="fw-bold text-warning">{{ member.qualified_leads }}</span></td>
+                        <td><span class="fw-bold text-success">{{ member.total_bookings }}</span></td>
+                        <td class="small text-muted">{{ member.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">No members added yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Member Modal -->
+<div class="modal fade" id="addMemberModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title fw-bold">Add Marketing Member</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{% url 'members' %}">
+                {% csrf_token %}
+                <div class="modal-body py-3">
+                    <div class="mb-3">
+                        <label for="memberName" class="form-label fw-semibold">Member Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="memberName" name="name" placeholder="e.g. Anika Reddy" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="memberEmail" class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="memberEmail" name="email" placeholder="e.g. anika@company.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="memberId" class="form-label fw-semibold">Unique Member ID <small class="text-muted">(Optional)</small></label>
+                        <input type="text" class="form-control" id="memberId" name="member_id" placeholder="e.g. MEM105">
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

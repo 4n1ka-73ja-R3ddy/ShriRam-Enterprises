@@ -1,0 +1,279 @@
+{% extends 'marketing/base.html' %}
+
+{% block title %}Dashboard - AppointMark{% endblock %}
+{% block page_title %}Marketing Dashboard{% endblock %}
+
+{% block content %}
+<!-- Top Row: 4 Metric Cards -->
+<div class="row g-3 mb-4">
+    <!-- Total Visits -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card stat-card">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small fw-semibold text-uppercase">Total Visits</span>
+                    <h2 class="fw-bold mt-1 mb-0">{{ total_visits }}</h2>
+                    <small class="text-muted">Link opens recorded</small>
+                </div>
+                <div class="stat-icon">
+                    <i class="fa-solid fa-eye"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Leads -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card stat-card">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small fw-semibold text-uppercase">Total Leads</span>
+                    <h2 class="fw-bold mt-1 mb-0">{{ total_leads }}</h2>
+                    <small class="text-primary fw-medium">{{ visit_to_lead_rate }}% conversion rate</small>
+                </div>
+                <div class="stat-icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Qualified Leads -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card stat-card">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small fw-semibold text-uppercase">Qualified Leads</span>
+                    <h2 class="fw-bold mt-1 mb-0">{{ qualified_leads }}</h2>
+                    <small class="text-muted">Vetted prospects</small>
+                </div>
+                <div class="stat-icon">
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Appointments -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card stat-card">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small fw-semibold text-uppercase">Appointments Booked</span>
+                    <h2 class="fw-bold mt-1 mb-0">{{ total_appointments }}</h2>
+                    <small class="text-success fw-medium">{{ lead_to_booked_rate }}% final booked</small>
+                </div>
+                <div class="stat-icon">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Middle Row: Chart (Left) + Funnel (Right) -->
+<div class="row g-4 mb-4">
+    <!-- Chart Section -->
+    <div class="col-12 col-lg-7 col-xl-8">
+        <div class="card h-100">
+            <div class="card-header border-0 bg-transparent pt-4 px-4 pb-0">
+                <h6 class="fw-bold mb-0">Platform Performance</h6>
+                <small class="text-muted">Visits, leads, and bookings grouped by marketing channel</small>
+            </div>
+            <div class="card-body p-4">
+                <canvas id="performanceChart" style="max-height: 280px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conversion Funnel Section -->
+    <div class="col-12 col-lg-5 col-xl-4">
+        <div class="card h-100">
+            <div class="card-header border-0 bg-transparent pt-4 px-4 pb-0">
+                <h6 class="fw-bold mb-0">Conversion Funnel</h6>
+                <small class="text-muted">Stage by stage progression</small>
+            </div>
+            <div class="card-body p-4 d-flex flex-column justify-content-between">
+                <div class="funnel-list-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fw-semibold small">1. Marketing Links</div>
+                        <small class="text-muted">Active tracking links</small>
+                    </div>
+                    <span class="fw-bold fs-5">{{ funnel.total_links }}</span>
+                </div>
+
+                <div class="funnel-list-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fw-semibold small">2. Total Visits</div>
+                        <small class="text-muted">Visitor page opens</small>
+                    </div>
+                    <span class="fw-bold fs-5">{{ funnel.visits }}</span>
+                </div>
+
+                <div class="funnel-list-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fw-semibold small">3. Form Leads</div>
+                        <small class="text-muted">Submitted inquiries</small>
+                    </div>
+                    <span class="fw-bold fs-5 text-primary">{{ funnel.leads }}</span>
+                </div>
+
+                <div class="funnel-list-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fw-semibold small">4. Qualified Leads</div>
+                        <small class="text-muted">Admin verified</small>
+                    </div>
+                    <span class="fw-bold fs-5 text-warning">{{ funnel.qualified }}</span>
+                </div>
+
+                <div class="funnel-list-item d-flex justify-content-between align-items-center mb-0" style="background-color: var(--primary-light); border-color: var(--primary-border);">
+                    <div>
+                        <div class="fw-semibold small text-primary">5. Appointments Booked</div>
+                        <small class="text-muted">Final bookings</small>
+                    </div>
+                    <span class="fw-bold fs-5 text-primary">{{ funnel.booked }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Row: Recent Activity -->
+<div class="card">
+    <div class="card-header border-0 bg-transparent pt-4 px-4 pb-0 d-flex justify-content-between align-items-center">
+        <div>
+            <h6 class="fw-bold mb-0">Recent Marketing Activity</h6>
+            <small class="text-muted">Latest lead submissions and attributions</small>
+        </div>
+        <a href="{% url 'leads' %}" class="btn btn-sm btn-outline-primary rounded-pill px-3">View All Leads</a>
+    </div>
+    <div class="card-body p-4">
+        <div class="table-responsive">
+            <table class="table custom-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Lead Name</th>
+                        <th>Attributed Member</th>
+                        <th>Platform</th>
+                        <th>Campaign</th>
+                        <th>Status</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lead in recent_leads %}
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">{{ lead.name }}</div>
+                            <small class="text-muted">{{ lead.email }}</small>
+                        </td>
+                        <td>
+                            {% if lead.link %}
+                                <span class="fw-medium">{{ lead.link.member.name }}</span>
+                            {% else %}
+                                <span class="text-muted">Direct</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if lead.link %}
+                                <span class="badge-platform">{{ lead.link.get_platform_display }}</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if lead.link %}
+                                <code>{{ lead.link.campaign }}</code>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge-status badge-{{ lead.status }}">{{ lead.get_status_display }}</span>
+                        </td>
+                        <td class="small text-muted">
+                            {{ lead.created_at|timesince }} ago
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">No activity recorded yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let chart;
+
+        function getColors() {
+            const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+            return {
+                gridColor: isDark ? 'rgba(255, 255, 255, 0.08)' : '#e5e7eb',
+                textColor: isDark ? '#94a3b8' : '#6b7280'
+            };
+        }
+
+        function renderChart() {
+            const colors = getColors();
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: {{ platform_labels|safe }},
+                    datasets: [
+                        {
+                            label: 'Visits',
+                            data: {{ platform_visits|safe }},
+                            backgroundColor: '#ddd6fe',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Leads',
+                            data: {{ platform_leads|safe }},
+                            backgroundColor: '#a78bfa',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Bookings',
+                            data: {{ platform_bookings|safe }},
+                            backgroundColor: '#7c3aed',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: colors.textColor } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: colors.gridColor }, ticks: { color: colors.textColor } },
+                        x: { grid: { display: false }, ticks: { color: colors.textColor } }
+                    }
+                }
+            });
+        }
+
+        renderChart();
+
+        window.addEventListener('themeChanged', function() {
+            if (chart) {
+                const colors = getColors();
+                chart.options.plugins.legend.labels.color = colors.textColor;
+                chart.options.scales.y.grid.color = colors.gridColor;
+                chart.options.scales.y.ticks.color = colors.textColor;
+                chart.options.scales.x.ticks.color = colors.textColor;
+                chart.update();
+            }
+        });
+    });
+</script>
+{% endblock %}
