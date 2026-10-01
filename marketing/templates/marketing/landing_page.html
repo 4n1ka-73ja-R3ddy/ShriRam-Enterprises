@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book an Appointment - Appointment Booking Application</title>
+    <title>Book an Appointment - Client Booking Portal</title>
 
     <script>
         (function() {
@@ -12,66 +12,102 @@
         })();
     </script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     {% load static %}
     <link rel="stylesheet" href="{% static 'marketing/css/custom.css' %}">
+
+    <style>
+        :root, [data-bs-theme="light"] {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --border-color: #e2e8f0;
+        }
+        [data-bs-theme="dark"] {
+            --primary: #818cf8;
+            --primary-hover: #6366f1;
+            --bg-main: #0b0f19;
+            --bg-card: #151c2c;
+            --text-main: #f8fafc;
+            --border-color: #243048;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+        }
+        .hero-banner {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #8b5cf6 100%);
+            border-radius: 20px 20px 0 0;
+        }
+    </style>
 </head>
-<body class="py-5">
+<body class="py-4 py-md-5">
 
     <div class="container" style="max-width: 760px;">
         <!-- Top Navigation -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <span class="badge bg-subtle text-body px-3 py-2 rounded-pill border">
+            <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill border">
                 <i class="fa-solid fa-calendar-check me-1 text-primary"></i> Client Booking Portal
             </span>
 
             <div class="d-flex align-items-center gap-2">
-                <button type="button" id="themeToggleBtn" onclick="toggleTheme()" class="theme-switch-btn" aria-label="Toggle Theme">
-                    <i class="fa-solid fa-moon text-primary" id="themeIcon"></i>
+                <button type="button" id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-sm btn-outline-secondary rounded-pill px-3" aria-label="Toggle Theme">
+                    <i class="fa-solid fa-moon me-1 text-primary" id="themeIcon"></i>
                     <span id="themeText">Dark Mode</span>
                 </button>
-                <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-                    <i class="fa-solid fa-gauge me-1"></i> Admin Dashboard
+                <a href="{% url 'dashboard' %}" class="btn btn-primary btn-sm rounded-pill px-3">
+                    <i class="fa-solid fa-gauge me-1"></i> Admin Console
                 </a>
             </div>
         </div>
 
         <!-- Marketing Attribution Indicator -->
         {% if attribution_link %}
-        <div class="card p-3 mb-4 border-0 shadow-sm" style="background-color: var(--primary-light); border: 1px solid var(--primary-border) !important;">
+        <div class="card p-3 mb-4 border-0 shadow-sm rounded-4" style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25) !important;">
             <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <span class="fw-bold d-block text-primary">Attributed Referral Active</span>
-                    <small class="text-muted">
-                        Referred by <strong>{{ attribution_link.member.name }}</strong> via <strong>{{ attribution_link.get_platform_display }}</strong> ({{ attribution_link.campaign }})
-                    </small>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center bg-primary text-white" style="width: 40px; height: 40px;">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <div>
+                        <span class="fw-bold d-block text-primary">Referred Partner Attribution Active</span>
+                        <small class="text-muted">
+                            Referred by <strong>{{ attribution_link.member.name }}</strong> via <strong>{{ attribution_link.get_platform_display }}</strong> ({{ attribution_link.campaign }})
+                        </small>
+                    </div>
                 </div>
-                <code class="px-2 py-1 rounded bg-white text-primary">/m/{{ attribution_link.short_code }}</code>
+                <code class="px-3 py-1 rounded-pill bg-white text-primary fw-bold shadow-sm">/m/{{ attribution_link.short_code }}</code>
             </div>
         </div>
         {% endif %}
 
         <!-- Form Card -->
-        <div class="card border-0 shadow-sm overflow-hidden">
-            <div class="p-4 p-md-5 text-center text-white" style="background-color: var(--primary);">
-                <h3 class="fw-bold mb-1">Schedule Your Appointment</h3>
-                <p class="mb-0 opacity-90 small">Fill in your details below to request a session.</p>
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="hero-banner p-4 p-md-5 text-center text-white">
+                <div class="d-inline-flex align-items-center justify-content-center bg-white bg-opacity-20 rounded-circle mb-3" style="width: 64px; height: 64px;">
+                    <i class="fa-solid fa-calendar-days fs-2"></i>
+                </div>
+                <h2 class="fw-extrabold mb-1">Schedule Your Consultation</h2>
+                <p class="mb-0 opacity-90">Select your preferred date and details to submit your request.</p>
             </div>
             <div class="card-body p-4 p-md-5">
 
                 {% if submitted %}
                 <div class="text-center py-4">
-                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background-color: rgba(16, 185, 129, 0.15); color: #059669;">
-                        <i class="fa-solid fa-check fs-2"></i>
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 72px; height: 72px; background-color: rgba(16, 185, 129, 0.15); color: #10b981;">
+                        <i class="fa-solid fa-check fs-1"></i>
                     </div>
-                    <h4 class="fw-bold mb-2">Request Submitted!</h4>
-                    <p class="text-muted mb-4">Thank you, <strong>{{ new_lead.name }}</strong>. Your request has been logged successfully.</p>
+                    <h3 class="fw-bold mb-2">Appointment Request Received!</h3>
+                    <p class="text-muted mb-4">Thank you, <strong>{{ new_lead.name }}</strong>. Your request has been recorded and attributed successfully.</p>
 
                     <div class="d-flex justify-content-center gap-3">
                         <a href="{% url 'landing_page' %}" class="btn btn-outline-primary rounded-pill px-4">Submit Another</a>
-                        <a href="{% url 'leads' %}" class="btn btn-primary rounded-pill px-4">View in Admin</a>
+                        <a href="{% url 'leads' %}" class="btn btn-primary rounded-pill px-4">View in Admin Console</a>
                     </div>
                 </div>
 
@@ -82,22 +118,31 @@
                     <div class="row g-3">
                         <div class="col-12">
                             <label for="name" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="e.g. John Doe" required>
+                            <div class="input-group">
+                                <span class="input-group-text bg-subtle"><i class="fa-regular fa-user"></i></span>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="e.g. John Doe" required>
+                            </div>
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label for="email" class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="e.g. john@example.com" required>
+                            <div class="input-group">
+                                <span class="input-group-text bg-subtle"><i class="fa-regular fa-envelope"></i></span>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="e.g. john@example.com" required>
+                            </div>
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label for="phone" class="form-label fw-semibold">Phone Number <span class="text-danger">*</span></label>
-                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="e.g. +91 98765 43210" required>
+                            <div class="input-group">
+                                <span class="input-group-text bg-subtle"><i class="fa-solid fa-phone"></i></span>
+                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="e.g. +91 98765 43210" required>
+                            </div>
                         </div>
 
                         <div class="col-12 mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold">
-                                Submit Appointment Request
+                            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow">
+                                <i class="fa-solid fa-paper-plane me-2"></i> Submit Appointment Request
                             </button>
                         </div>
                     </div>
