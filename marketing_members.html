@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AppointmentHub | Marketing Members</title>
+  <link rel="stylesheet" href="css/theme.css">
+  <style>
+    .subnav { display: flex; gap: 10px; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); overflow-x: auto; }
+    .subnav-link { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; color: var(--text-muted); text-decoration: none !important; background: #f1f5f9; }
+    .subnav-link.active, .subnav-link:hover { background: var(--primary); color: var(--text-white); }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <a class="brand" href="index.html"><span class="brand-mark">A</span><span>Appointment<span class="brand-accent">Hub</span></span></a>
+    <nav>
+      <ul class="nav-links">
+        <li><a class="nav-link" href="index.html">📅 Book Appointment</a></li>
+        <li><a class="nav-link" href="trainer.html">🎓 Trainer Portal</a></li>
+        <li><a class="nav-link" href="reminders.html">🔔 Reminder Center</a></li>
+        <li><a class="nav-link active" href="marketing_dashboard.html">📈 Marketing Hub</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="section-kicker">MARKETING MEMBERS</div>
+    <h1 class="page-title">Team Members & Referrers</h1>
+    <p class="hero-copy">Manage marketing team members and generate tracking IDs.</p>
+
+    <div class="subnav">
+      <a class="subnav-link" href="marketing_dashboard.html">Overview</a>
+      <a class="subnav-link active" href="marketing_members.html">Members</a>
+      <a class="subnav-link" href="marketing_links.html">Trackable Links</a>
+      <a class="subnav-link" href="marketing_leads.html">Leads</a>
+      <a class="subnav-link" href="marketing_analytics.html">Analytics</a>
+    </div>
+
+    <div class="grid-1-2">
+      <!-- Add Member Form -->
+      <div class="panel">
+        <div class="panel-head"><h2>Add Marketing Member</h2></div>
+        <div class="form-group">
+          <label>FULL NAME</label>
+          <input type="text" id="mName" placeholder="e.g. Anika Reddy">
+        </div>
+        <div class="form-group">
+          <label>EMAIL</label>
+          <input type="email" id="mEmail" placeholder="anika@example.com">
+        </div>
+        <div class="form-group">
+          <label>MEMBER ID (OPTIONAL)</label>
+          <input type="text" id="mId" placeholder="e.g. MEM105">
+        </div>
+        <button class="primary-btn" style="width:100%" onclick="addMember()">Add Member</button>
+      </div>
+
+      <!-- Member List Table -->
+      <div class="panel">
+        <div class="panel-head"><h2>Registered Members</h2></div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Member Name</th>
+              <th>Member ID</th>
+              <th>Email</th>
+              <th>Total Visits</th>
+              <th>Bookings</th>
+            </tr>
+          </thead>
+          <tbody id="memberTable">
+            <tr><td><b>Anika Reddy</b></td><td><code>MEM101</code></td><td>anika@shriram.com</td><td>142</td><td>1</td></tr>
+            <tr><td><b>Rahul Sharma</b></td><td><code>MEM102</code></td><td>rahul@shriram.com</td><td>98</td><td>1</td></tr>
+            <tr><td><b>Priya Patel</b></td><td><code>MEM103</code></td><td>priya@shriram.com</td><td>115</td><td>0</td></tr>
+            <tr><td><b>Vikram Malhotra</b></td><td><code>MEM104</code></td><td>vikram@shriram.com</td><td>76</td><td>1</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/shared.js"></script>
+  <script>
+    function addMember() {
+      const name = document.getElementById('mName').value.trim();
+      const email = document.getElementById('mEmail').value.trim();
+      let memId = document.getElementById('mId').value.trim();
+      if (!name || !email) return alert('Name and email are required');
+      if (!memId) memId = 'MEM' + (105 + Math.floor(Math.random()*100));
+      
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td><b>${name}</b></td><td><code>${memId}</code></td><td>${email}</td><td>0</td><td>0</td>`;
+      document.getElementById('memberTable').appendChild(tr);
+      alert('Member ' + name + ' (' + memId + ') added successfully!');
+      document.getElementById('mName').value = '';
+      document.getElementById('mEmail').value = '';
+      document.getElementById('mId').value = '';
+    }
+  </script>
+</body>
+</html>

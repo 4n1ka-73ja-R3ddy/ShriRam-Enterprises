@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AppointmentHub | Trackable Referral Links</title>
+  <link rel="stylesheet" href="css/theme.css">
+  <style>
+    .subnav { display: flex; gap: 10px; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); overflow-x: auto; }
+    .subnav-link { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; color: var(--text-muted); text-decoration: none !important; background: #f1f5f9; }
+    .subnav-link.active, .subnav-link:hover { background: var(--primary); color: var(--text-white); }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <a class="brand" href="index.html"><span class="brand-mark">A</span><span>Appointment<span class="brand-accent">Hub</span></span></a>
+    <nav>
+      <ul class="nav-links">
+        <li><a class="nav-link" href="index.html">📅 Book Appointment</a></li>
+        <li><a class="nav-link" href="trainer.html">🎓 Trainer Portal</a></li>
+        <li><a class="nav-link" href="reminders.html">🔔 Reminder Center</a></li>
+        <li><a class="nav-link active" href="marketing_dashboard.html">📈 Marketing Hub</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="section-kicker">TRACKABLE LINKS</div>
+    <h1 class="page-title">Referral Link Generator</h1>
+    <p class="hero-copy">Generate and manage unique trackable referral links for social channels.</p>
+
+    <div class="subnav">
+      <a class="subnav-link" href="marketing_dashboard.html">Overview</a>
+      <a class="subnav-link" href="marketing_members.html">Members</a>
+      <a class="subnav-link active" href="marketing_links.html">Trackable Links</a>
+      <a class="subnav-link" href="marketing_leads.html">Leads</a>
+      <a class="subnav-link" href="marketing_analytics.html">Analytics</a>
+    </div>
+
+    <div class="grid-1-2">
+      <!-- Create Link Form -->
+      <div class="panel">
+        <div class="panel-head"><h2>Create Trackable Link</h2></div>
+        <div class="form-group">
+          <label>MEMBER</label>
+          <select id="lMember">
+            <option value="MEM101">Anika Reddy (MEM101)</option>
+            <option value="MEM102">Rahul Sharma (MEM102)</option>
+            <option value="MEM103">Priya Patel (MEM103)</option>
+            <option value="MEM104">Vikram Malhotra (MEM104)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>PLATFORM</label>
+          <select id="lPlatform">
+            <option value="instagram">Instagram</option>
+            <option value="whatsapp">WhatsApp</option>
+            <option value="linkedin">LinkedIn</option>
+            <option value="facebook">Facebook</option>
+            <option value="email">Email</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>CAMPAIGN NAME</label>
+          <input type="text" id="lCampaign" placeholder="e.g. september_promo">
+        </div>
+        <button class="primary-btn" style="width:100%" onclick="createLink()">Generate Short Link</button>
+      </div>
+
+      <!-- Links List Table -->
+      <div class="panel">
+        <div class="panel-head"><h2>Active Tracking Links</h2></div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Short Code / Target</th>
+              <th>Member</th>
+              <th>Platform</th>
+              <th>Campaign</th>
+              <th>Visits</th>
+            </tr>
+          </thead>
+          <tbody id="linksTable">
+            <tr><td><a href="index.html?short_code=IGSEP9&member=MEM101&source=instagram&campaign=september_promo" target="_blank"><code>index.html?short_code=IGSEP9</code></a></td><td>Anika Reddy</td><td><span class="badge high">Instagram</span></td><td>september_promo</td><td>84</td></tr>
+            <tr><td><a href="index.html?short_code=LINKIN&member=MEM101&source=linkedin&campaign=b2b_outreach" target="_blank"><code>index.html?short_code=LINKIN</code></a></td><td>Anika Reddy</td><td><span class="badge medium">LinkedIn</span></td><td>b2b_outreach</td><td>58</td></tr>
+            <tr><td><a href="index.html?short_code=WACHAT&member=MEM102&source=whatsapp&campaign=direct_connect" target="_blank"><code>index.html?short_code=WACHAT</code></a></td><td>Rahul Sharma</td><td><span class="badge high">WhatsApp</span></td><td>direct_connect</td><td>98</td></tr>
+            <tr><td><a href="index.html?short_code=FBAUTM&member=MEM103&source=facebook&campaign=autumn_festival" target="_blank"><code>index.html?short_code=FBAUTM</code></a></td><td>Priya Patel</td><td><span class="badge medium">Facebook</span></td><td>autumn_festival</td><td>115</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/shared.js"></script>
+  <script>
+    function createLink() {
+      const mem = document.getElementById('lMember').value;
+      const plat = document.getElementById('lPlatform').value;
+      const camp = document.getElementById('lCampaign').value.trim() || 'general';
+      const code = 'LK' + Math.random().toString(36).substring(2, 6).toUpperCase();
+      
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td><a href="index.html?short_code=${code}&member=${mem}&source=${plat}&campaign=${camp}" target="_blank"><code>index.html?short_code=${code}</code></a></td><td>${mem}</td><td><span class="badge high">${plat}</span></td><td>${camp}</td><td>0</td>`;
+      document.getElementById('linksTable').appendChild(tr);
+      alert('Trackable link created: index.html?short_code=' + code);
+    }
+  </script>
+</body>
+</html>

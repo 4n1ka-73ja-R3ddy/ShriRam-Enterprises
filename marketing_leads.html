@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AppointmentHub | Marketing Leads</title>
+  <link rel="stylesheet" href="css/theme.css">
+  <style>
+    .subnav { display: flex; gap: 10px; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); overflow-x: auto; }
+    .subnav-link { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; color: var(--text-muted); text-decoration: none !important; background: #f1f5f9; }
+    .subnav-link.active, .subnav-link:hover { background: var(--primary); color: var(--text-white); }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <a class="brand" href="index.html"><span class="brand-mark">A</span><span>Appointment<span class="brand-accent">Hub</span></span></a>
+    <nav>
+      <ul class="nav-links">
+        <li><a class="nav-link" href="index.html">📅 Book Appointment</a></li>
+        <li><a class="nav-link" href="trainer.html">🎓 Trainer Portal</a></li>
+        <li><a class="nav-link" href="reminders.html">🔔 Reminder Center</a></li>
+        <li><a class="nav-link active" href="marketing_dashboard.html">📈 Marketing Hub</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="section-kicker">MARKETING LEADS</div>
+    <h1 class="page-title">Lead Management & Status Tracking</h1>
+    <p class="hero-copy">Inspect captured leads, referral attribution sources, and lead conversion status.</p>
+
+    <div class="subnav">
+      <a class="subnav-link" href="marketing_dashboard.html">Overview</a>
+      <a class="subnav-link" href="marketing_members.html">Members</a>
+      <a class="subnav-link" href="marketing_links.html">Trackable Links</a>
+      <a class="subnav-link active" href="marketing_leads.html">Leads</a>
+      <a class="subnav-link" href="marketing_analytics.html">Analytics</a>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Captured Leads</h2>
+          <p>Leads captured via booking forms & referral links.</p>
+        </div>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Lead Name</th>
+            <th>Contact Email</th>
+            <th>Phone</th>
+            <th>Referral Link / Source</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="leadsTable">
+          <tr><td><b>Aarav Verma</b></td><td>aarav.v@gmail.com</td><td>+91 98765 43210</td><td><code>IGSEP9</code> (Anika Reddy)</td><td><span class="status confirmed">Booked</span></td></tr>
+          <tr><td><b>Sneha Kapoor</b></td><td>sneha.k@yahoo.com</td><td>+91 98123 45678</td><td><code>WACHAT</code> (Rahul Sharma)</td><td><span class="status pending">Qualified</span></td></tr>
+          <tr><td><b>Rohan Mehta</b></td><td>rohan.m@outlook.com</td><td>+91 97654 32109</td><td><code>FBAUTM</code> (Priya Patel)</td><td><span class="status pending">New</span></td></tr>
+          <tr><td><b>Kavya Iyer</b></td><td>kavya.i@techcorp.in</td><td>+91 99887 76655</td><td><code>LINKIN</code> (Anika Reddy)</td><td><span class="status confirmed">Booked</span></td></tr>
+          <tr><td><b>Amitabh Joshi</b></td><td>ajoshi@enterprise.com</td><td>+91 98334 11223</td><td><code>EMLNEW</code> (Vikram Malhotra)</td><td><span class="status pending">Qualified</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="js/shared.js"></script>
+  <script>
+    // Hydrate dynamically created leads from local storage if available
+    const bookings = getBookings();
+    if (bookings.length > 0) {
+      const tbody = document.getElementById('leadsTable');
+      bookings.forEach(b => {
+        const tr = document.createElement('tr');
+        const stCls = b.status === 'CONFIRMED' ? 'confirmed' : 'pending';
+        tr.innerHTML = `<td><b>${b.name}</b></td><td>${b.email}</td><td>${b.phone}</td><td><code>DIRECT / BOOKING</code></td><td><span class="status ${stCls}">${(STATUS[b.status]||STATUS.PENDING_FORM).label}</span></td>`;
+        tbody.prepend(tr);
+      });
+    }
+  </script>
+</body>
+</html>

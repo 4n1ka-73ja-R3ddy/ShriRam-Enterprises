@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AppointmentHub | Reminder Center</title>
+  <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+
+  <!-- Unified Navigation Bar -->
+  <header class="navbar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">A</span>
+      <span>Appointment<span class="brand-accent">Hub</span></span>
+    </a>
+    <nav>
+      <ul class="nav-links">
+        <li><a class="nav-link" href="index.html">📅 Book Appointment</a></li>
+        <li><a class="nav-link" href="trainer.html">🎓 Trainer Portal</a></li>
+        <li><a class="nav-link active" href="reminders.html">🔔 Reminder Center</a></li>
+        <li><a class="nav-link" href="marketing_dashboard.html">📈 Marketing Hub</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="section-kicker">MEETING MANAGEMENT</div>
+    <h1 class="page-title">Reminder Center</h1>
+    <p class="hero-copy">Manage upcoming meeting reminders and configure multi-channel notification rules.</p>
+
+    <!-- Stats Bar -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <label>UPCOMING MEETINGS</label>
+        <strong>3</strong>
+        <small>Scheduled</small>
+      </div>
+      <div class="stat-card">
+        <label>NEXT MEETING</label>
+        <strong id="nextTime">10:30 AM</strong>
+        <small id="nextTitle">Team Meeting</small>
+      </div>
+      <div class="stat-card">
+        <label>NEXT REMINDER</label>
+        <strong id="nextReminder">15 min</strong>
+        <small>Before meeting</small>
+      </div>
+      <div class="stat-card">
+        <label>SERVICE STATUS</label>
+        <strong style="color:var(--success)">Active</strong>
+        <small>Reminder engine</small>
+      </div>
+    </div>
+
+    <div class="grid-2-1">
+      <!-- Upcoming Meetings List -->
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Upcoming Meetings</h2>
+            <p>Scheduled meetings for participant notifications.</p>
+          </div>
+          <span class="badge high">3 scheduled</span>
+        </div>
+        <div id="meetingList"></div>
+      </div>
+
+      <!-- Reminder Preferences Controls -->
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Reminder Preferences</h2>
+            <p>Choose timing and delivery channels.</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>REMINDER TIMING</label>
+          <select id="timing">
+            <option value="5">5 minutes before</option>
+            <option value="10">10 minutes before</option>
+            <option value="15" selected>15 minutes before</option>
+            <option value="30">30 minutes before</option>
+            <option value="60">1 hour before</option>
+            <option value="1440">1 day before</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>CUSTOM TIMING</label>
+          <div class="grid" style="grid-template-columns: 1fr 1fr auto; gap: 8px;">
+            <input id="customValue" type="number" min="1" placeholder="Time">
+            <select id="customUnit">
+              <option value="minutes">minutes</option>
+              <option value="hours">hours</option>
+              <option value="days">days</option>
+            </select>
+            <button class="primary-btn" onclick="applyCustom()">Apply</button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:20px">
+          <label>NOTIFICATION CHANNELS</label>
+          <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
+            <label class="panel" style="padding:10px;margin:0;display:flex;align-items:center;gap:10px;cursor:pointer">
+              <input type="checkbox" checked style="accent-color:var(--primary);width:auto">
+              <div>
+                <b style="font-size:12px;display:block">WhatsApp</b>
+                <small style="font-size:10px;color:var(--text-muted)">Instant message</small>
+              </div>
+            </label>
+            <label class="panel" style="padding:10px;margin:0;display:flex;align-items:center;gap:10px;cursor:pointer">
+              <input type="checkbox" checked style="accent-color:var(--primary);width:auto">
+              <div>
+                <b style="font-size:12px;display:block">SMS</b>
+                <small style="font-size:10px;color:var(--text-muted)">Text reminder</small>
+              </div>
+            </label>
+            <label class="panel" style="padding:10px;margin:0;display:flex;align-items:center;gap:10px;cursor:pointer">
+              <input type="checkbox" checked style="accent-color:var(--primary);width:auto">
+              <div>
+                <b style="font-size:12px;display:block">Email</b>
+                <small style="font-size:10px;color:var(--text-muted)">Email reminder</small>
+              </div>
+            </label>
+            <label class="panel" style="padding:10px;margin:0;display:flex;align-items:center;gap:10px;cursor:pointer">
+              <input type="checkbox" checked style="accent-color:var(--primary);width:auto">
+              <div>
+                <b style="font-size:12px;display:block">Google Calendar</b>
+                <small style="font-size:10px;color:var(--text-muted)">Calendar alert</small>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="notice" style="margin-top:20px;margin-bottom:0">
+          <b>Flexible Timing:</b> 15 minutes is the default setting. You can adjust the timing for individual reminders whenever needed.
+        </div>
+      </div>
+    </div>
+
+    <!-- Meeting & Participant Details Section -->
+    <div class="panel" style="margin-top:24px">
+      <div class="panel-head">
+        <div>
+          <h2>Meeting & Participant Details</h2>
+          <p>Active notification details for selected meeting.</p>
+        </div>
+        <span id="selectedStatus" class="status accepted">Accepted</span>
+      </div>
+      <div id="details" class="stats-grid"></div>
+    </div>
+
+    <footer style="text-align:center;color:var(--text-muted);font-size:11px;padding:24px 0">
+      MeetFlow · Booking is handled by the appointment scheduling module · Prototype demo
+    </footer>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="js/shared.js"></script>
+  <script src="js/reminders.js"></script>
+</body>
+</html>
